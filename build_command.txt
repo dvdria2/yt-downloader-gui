@@ -1,0 +1,1 @@
+pyinstaller --clean -y -n "YouTubeVideoDownloader" main.py --onefile --add-data="files/logo.png:files"

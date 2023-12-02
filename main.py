@@ -5,7 +5,7 @@ import validators
 from pytube import YouTube
 import os
 from PIL import Image, ImageTk
-
+import sys
 
 class YouTubeVideoDownloader(tk.Tk):
     def __init__(self):
@@ -13,8 +13,14 @@ class YouTubeVideoDownloader(tk.Tk):
         self.title("YouTube Video Downloader")
         self.geometry('400x200+100+100')
         self.resizable(False, False)
-        self.iconphoto(False, ImageTk.PhotoImage(file="logo.png", size="1024x1024")) 
-        self.iconbitmap(bitmap='bitmaplogo.ico')
+        if getattr(sys, 'frozen', False):
+            ico = Image.open(os.path.join(sys._MEIPASS, "files/logo.png"))
+        else:
+            ico = Image.open("files/logo.png")
+        photo = ImageTk.PhotoImage(ico)
+        self.wm_iconphoto(False, photo)
+        self.iconphoto(False, photo) 
+
         self.get_previous_destination()
         self.create_widgets()
 
@@ -60,8 +66,11 @@ class YouTubeVideoDownloader(tk.Tk):
         return bool(validators.url(url))
     
     def get_previous_destination(self):
-        self.previous_destination = open("./previous_destination.txt", mode="r").read()
-    
+        try:
+            self.previous_destination = open("./previous_destination.txt", mode="r").read()
+        except:
+            self.previous_destination = ""
+
     def set_previous_destination(self, destination):
         open("./previous_destination.txt", mode="w").write(destination)
     
